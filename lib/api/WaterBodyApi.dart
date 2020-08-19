@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class WaterBodyApi {
   static const url =
@@ -12,13 +13,39 @@ class WaterBodyApi {
   };
 
   Future<List<WaterBody>> getAllWaterBodies() async {
-    var body = json.encode({});
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var response = await http.post(url, body: body, headers: headers);
+    if (prefs.getInt('waterBodyApiDate') == null) {
+      await prefs.setInt('waterBodyApiDate', 0);
+    }
 
-    if (response.statusCode != 200) return List<WaterBody>();
+    DateTime cache =
+        DateTime.fromMillisecondsSinceEpoch(prefs.getInt('waterBodyApiDate'));
 
-    final bodiesJson = json.decode(response.body);
+    bool useCache;
+    if (cache.add(Duration(days: 1)).isBefore(DateTime.now())) {
+      useCache = false;
+    } else {
+      useCache = true;
+    }
+
+    var bodiesJson;
+    if (useCache == false) {
+      var body = json.encode({});
+
+      var response = await http.post(url, body: body, headers: headers);
+
+      if (response.statusCode != 200) return List<WaterBody>();
+
+      await prefs.setInt(
+          'waterBodyApiDate', DateTime.now().millisecondsSinceEpoch);
+
+      await prefs.setString('waterBodyApi', response.body);
+
+      bodiesJson = json.decode(response.body);
+    } else {
+      bodiesJson = json.decode(prefs.getString('waterBodyApi'));
+    }
 
     List<WaterBody> waterBodies = List<WaterBody>();
     for (var bodyJson in bodiesJson['Result']) {
