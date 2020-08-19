@@ -13,20 +13,47 @@ class WaterAccessApi {
   };
 
   Future<List<AccessSite>> getAllAcessSites() async {
-    var body = json.encode({
-      "northEastLat": 102.81401063830785,
-      "northEastLng": -44.617968556271705,
-      "southWestLat": -17.074970707553526,
-      "southWestLng": -132.61403304680803,
-      "userLat": 38.141783771370896,
-      "userLng": -84.85246857970064
-    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    var response = await http.post(url, body: body, headers: headers);
+    if (prefs.getInt('waterAccessApiDate') == null) {
+      await prefs.setInt('waterAccessApiDate', 0);
+    }
 
-    if (response.statusCode != 200) return List<AccessSite>();
+    DateTime cache =
+        DateTime.fromMillisecondsSinceEpoch(prefs.getInt('waterAccessApiDate'));
 
-    final sitesJson = json.decode(response.body);
+    bool useCache;
+    if (cache.add(Duration(days: 1)).isBefore(DateTime.now())) {
+      useCache = false;
+    } else {
+      useCache = true;
+    }
+
+    var sitesJson;
+
+    if (useCache == false) {
+      var body = json.encode({
+        "northEastLat": 102.81401063830785,
+        "northEastLng": -44.617968556271705,
+        "southWestLat": -17.074970707553526,
+        "southWestLng": -132.61403304680803,
+        "userLat": 38.141783771370896,
+        "userLng": -84.85246857970064
+      });
+
+      var response = await http.post(url, body: body, headers: headers);
+
+      if (response.statusCode != 200) return List<AccessSite>();
+
+      await prefs.setInt(
+          'waterAccessApiDate', DateTime.now().millisecondsSinceEpoch);
+
+      await prefs.setString('waterAccessApi', response.body);
+
+      sitesJson = json.decode(response.body);
+    } else {
+      sitesJson = json.decode(prefs.getString('waterAccessApi'));
+    }
 
     List<AccessSite> sites = List<AccessSite>();
     for (var siteJson in sitesJson['Result']) {
@@ -56,7 +83,7 @@ class WaterAccessApi {
         capacity: siteJson['accessSiteDetails']['capacity'],
         waterBodyName: siteJson['waterbodyDetails'][0]['name'],
       );
-      
+
       sites.insert(0, site);
     }
 
