@@ -34,7 +34,7 @@ class _WaterBodyDetailState extends State<WaterBodyDetail> {
       body: Column(
         children: [
           Image.network(widget.waterBody.imgUrl),
-          Text(widget.waterBody.imgDesc),
+          Text(imgDesc),
         ],
       ),
     );
