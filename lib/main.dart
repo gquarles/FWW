@@ -1,4 +1,4 @@
-import 'package:FWW/api/WaterBodyApi.dart';
+import 'package:FWW/screens/FINSMap.dart';
 import 'package:FWW/screens/waterAccessMap.dart';
 import 'package:FWW/screens/waterBodyList.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +46,7 @@ class MapSampleState extends State<MapSample> {
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(5),
-                  height: 100,
+                  height: 120,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -68,7 +68,7 @@ class MapSampleState extends State<MapSample> {
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(5),
-                  height: 100,
+                  height: 120,
                   child: InkWell(
                     onTap: () {
                       Navigator.push(
@@ -95,6 +95,66 @@ class MapSampleState extends State<MapSample> {
               ),
             ],
           ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  height: 120,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FINSMap(),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 20,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Fishing in'),
+                            Text('Neighborhoods'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  height: 120,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => WaterAccessMap(),
+                        ),
+                      );
+                    },
+                    child: Card(
+                      elevation: 20,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('My Profile'),
+                            Text('(Purchase License)'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );

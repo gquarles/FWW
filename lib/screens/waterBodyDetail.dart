@@ -16,7 +16,7 @@ class _WaterBodyDetailState extends State<WaterBodyDetail> {
     String imgDesc;
 
     if (widget.waterBody.imgDesc == null)
-      imgDesc = 'NULL';
+      imgDesc = '';
     else
       imgDesc = widget.waterBody.imgDesc;
 
@@ -31,11 +31,49 @@ class _WaterBodyDetailState extends State<WaterBodyDetail> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Image.network(widget.waterBody.imgUrl),
-          Text(imgDesc),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Image.network(widget.waterBody.imgUrl),
+            Text(imgDesc),
+            Text(
+              widget.waterBody.name,
+              style: TextStyle(fontSize: 20.0),
+            ),
+            Container(
+              padding: EdgeInsets.all(10),
+              child: Text(widget.waterBody.notes),
+            ),
+            Row(
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 10),
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.cyan, shape: BoxShape.circle),
+                    child: IconButton(
+                      color: Colors.white,
+                      icon: Icon(Icons.navigation),
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Divider(
+              thickness: 2,
+            ),
+            Container(
+              child: ListTile(
+                leading: Icon(
+                  Icons.info,
+                  size: 40,
+                ),
+                title: Text(widget.waterBody.desc),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
