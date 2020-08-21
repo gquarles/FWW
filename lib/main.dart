@@ -3,6 +3,7 @@ import 'package:FWW/screens/waterAccessMap.dart';
 import 'package:FWW/screens/waterBodyList.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 void main() => runApp(MyApp());
 
@@ -42,6 +43,22 @@ class MapSampleState extends State<MapSample> {
       ),
       body: Column(
         children: [
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 200.0,
+            ),
+            items: [
+              'https://www.wmky.org/sites/wmky/files/styles/medium/public/201901/saugeyeohior0002.JPG',
+              'https://kentuckylakegateway.com/wp-content/uploads/2018/03/12-6-hooked-fish.jpg',
+              'https://d2fxn1d7fsdeeo.cloudfront.net/kentuckyliving.com/wp-content/uploads/2018/10/04152005/Ohio-River-catfish-from-2018.jpg'
+            ].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Image.network(i);
+                },
+              );
+            }).toList(),
+          ),
           Row(
             children: [
               Expanded(
@@ -165,7 +182,7 @@ class MapSampleState extends State<MapSample> {
             title: Text('Favorites'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.new_releases),
+            icon: Icon(Icons.assignment),
             title: Text('News'),
           ),
           BottomNavigationBarItem(
