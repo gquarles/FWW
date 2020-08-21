@@ -2,6 +2,7 @@ import 'package:FWW/screens/FINSMap.dart';
 import 'package:FWW/screens/waterAccessMap.dart';
 import 'package:FWW/screens/waterBodyList.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() => runApp(MyApp());
 
@@ -131,12 +132,7 @@ class MapSampleState extends State<MapSample> {
                   height: 120,
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => WaterAccessMap(),
-                        ),
-                      );
+                      _launchURL('https://app.fw.ky.gov/myprofile/');
                     },
                     child: Card(
                       elevation: 20,
@@ -157,6 +153,35 @@ class MapSampleState extends State<MapSample> {
           )
         ],
       ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+            backgroundColor: Colors.green[900],
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            title: Text('Favorites'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.new_releases),
+            title: Text('News'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.more),
+            title: Text('More'),
+          ),
+        ],
+      ),
     );
+  }
+}
+
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }
