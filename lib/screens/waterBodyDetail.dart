@@ -1,5 +1,7 @@
 import 'package:FWW/api/WaterBodyApi.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WaterBodyDetail extends StatefulWidget {
   WaterBodyDetail({Key key, this.waterBody}) : super(key: key);
@@ -69,12 +71,25 @@ class _WaterBodyDetailState extends State<WaterBodyDetail> {
                   Icons.info,
                   size: 40,
                 ),
-                title: Text(widget.waterBody.desc),
+                title: Html(
+                  data: widget.waterBody.desc,
+                  onLinkTap: (url) {
+                    _launchURL(url);
+                  },
+                ),
               ),
             )
           ],
         ),
       ),
     );
+  }
+}
+
+_launchURL(String url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
   }
 }
